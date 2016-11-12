@@ -32,5 +32,20 @@ Manage your environments by simply creating $env.json files in your config direc
 ### Mongoose
 A preferred library for modeling your application data and interacting with MongoDB database. If you're not planning to MongoDB you can remove it, no problem.
 ### Underscore
-You may remove this if you dont need it. Its handy collection of helpers that I find useful.
+You may remove this if you dont need it. Its handy collection of helpers that I find useful
+
+## Application Structure
+
+### Static files
+When you clone this project you will see that there is a **public** directory. This is where all the static files will sit which all accessible publicly. Do not store your front end code in there; **gulp** will use javascripts in **src/js** and compile sass files in **src/stylesheets**, minify and uglify them and store them in public **css** and **js** folders. When adding new css or js files you may need to update **gulpfile.js** to add these new libraries.
+
+### Adding New Modules
+A module consists of a controller and route file. To add a new one create {moduleName}Controller.js in **server/controllers** and {moduleName}Route.js in **server/routes**. Finally, add the module name in **config/default.json**. This doesn't look like a module in literal sense but this structure is flexible because I don't necessarily want to isolate modules from my models.
+
+### Adding New Models
+Create {model}.js in **server/models** and add it to models array in **config/default.json**
+
+## Feedback
+
+Fork it, use it and feel free to submit ideas on how to make this better!
 
