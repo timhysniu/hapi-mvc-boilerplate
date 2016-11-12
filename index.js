@@ -22,6 +22,7 @@ const server = new Hapi.Server({
 
 // mongo db connection
 Mongoose.connect(Config.mongoose.uri);
+Mongoose.Promise = require('bluebird');
 server.db = Mongoose.connection;
 server.db.on('error', console.error.bind(console, 'connection error:'));
 server.db.once('open', function() {
@@ -64,6 +65,7 @@ server.register(require('vision'), (err) => {
     });
 });
 
+// load modules
 server.modules = {};
 Config.modules.forEach(function(module) {
     let controller = require('./server/controllers/' + module + 'Controller.js')(server);
@@ -81,6 +83,7 @@ Config.modules.forEach(function(module) {
     });
 });
 
+// load models
 server.models = {};
 Config.models.forEach(function(model) {
     console.log("Loading model", model)

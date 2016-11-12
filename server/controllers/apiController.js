@@ -1,29 +1,21 @@
 "use strict"
 
-const Mongoose = require('mongoose');
-
 module.exports = function (server) {
 
     let api = {};
 
-    api.getUser = function() {
-        return {
-            first_name: "John",
-            last_name: "Smith"
-        };
+    api.getStock = function(stock_id) {
+        return server.models.stock.findOne({stock_id: stock_id}).exec();
     };
 
-    api.saveUser = function() {
-        var newUser = new server.models.user({ first_name: 'Jim', 'last_name': 'Smith' });
+    api.saveStock = function(stock_id, price) {
+        var promise = server.models.stock.findOneAndUpdate(
+            { stock_id : stock_id},
+            { price: price },
+            { upsert: true }
+        ).exec();
 
-        newUser.save(function (err, user) {
-            if (err) {
-                return handleError(err);
-            }
-            console.dir(user);
-        });
-
-        return true;
+        return promise;
     };
 
     return api;

@@ -6,35 +6,68 @@ module.exports = function (controller) {
     return [
         {
             method: 'GET',
-            path: '/api/user/{user_id}',
+            path: '/api/stock/{stock_id}',
             config: {
-                handler: function(request, reply) {
-                    let user = controller.getUser();
-                    reply(user);
+                handler: function(request, reply)
+                {
+                    controller.getStock(request.params.stock_id).then(function(stock) {
+                        let response = {
+                            stock_id: stock.stock_id,
+                            price: stock.price
+                        };
+
+                        reply(response);
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+
                 },
-                description: 'Get user by id',
-                notes: 'Returns a user by id',
+                description: 'Get stock by id',
+                notes: 'Returns a stock by id',
                 tags: ['api'],
                 validate: {
                     params: {
-                        user_id: Joi.number()
+                        stock_id: Joi.string()
                             .required()
-                            .description('the id for the user'),
+                            .description('stock id'),
                     }
                 }
             }
         },
         {
             method: 'GET',
-            path: '/api/user/save',
+            path: '/api/stock/save/{stock_id}/{price}',
             config: {
-                handler: function(request, reply) {
-                    var success = controller.saveUser();
-                    reply({ success: 1});
+                handler: function(request, reply)
+                {
+                    controller.saveStock(request.params.stock_id, request.params.price)
+                        .then(function(stock) {
+                            let response = {
+                                stock_id: stock.stock_id,
+                                price: stock.price
+                            };
+
+                            reply(response);
+                        })
+                        .catch(function(err) {
+                            console.log(err);
+                        });
                 },
-                description: 'Create a user',
-                notes: 'Creates a new user',
-                tags: ['api']
+                description: 'Update stock price',
+                notes: 'Updates the stock price',
+                tags: ['api'],
+                validate: {
+                    params: {
+                        stock_id: Joi.string()
+                            .required()
+                            .description('stock id'),
+                        price: Joi.number()
+                            .required()
+                            .min(500)
+                            .max(10000)
+                            .description('price must a number between 500 and 10000'),
+                    }
+                }
             }
         }
     ];

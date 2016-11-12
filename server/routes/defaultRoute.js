@@ -7,7 +7,6 @@ module.exports = function (controller) {
             method: 'GET',
             path: '/',
             handler: function (request, reply) {
-                controller.getUser();
                 reply.view('default/index');
             }
         },
